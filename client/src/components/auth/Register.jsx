@@ -56,22 +56,25 @@ class Register extends Component {
             <span style={{ marginRight: 4 }}>Go Back Home</span>
           </Button>
         </Grid>
-        <Grid item sm={10}>
-          <Typography variant="h4" style={{ textAlign: 'right' }}>
-            <b>Register</b> Below
-          </Typography>
-        </Grid>
         <Paper
           style={{
             width: '50%',
             minWidth: 300,
             maxWidth: 500,
-            minHeight: 200,
+            // minHeight: 200,
             padding: '1.5rem'
           }}
         >
           <form action="">
             <Grid container direction="column" spacing={2}>
+              <Grid item style={{ marginLeft: '.5em' }}>
+                <Typography variant="h4">
+                  <b>Register</b> Below
+                </Typography>
+                <Typography>
+                  Already have an account? <Link to="/login">Log in</Link>
+                </Typography>
+              </Grid>
               <Grid item>
                 <TextField
                   label="Name"
