@@ -11,7 +11,6 @@ class Login extends Component {
       name: '',
       email: '',
       password: '',
-      password2: '',
       errors: {}
     };
   }
@@ -23,13 +22,12 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const { name, email, password, password2 } = this.state;
+    const { name, email, password } = this.state;
 
     const newUser = {
       name,
       email,
-      password,
-      password2
+      password
     };
 
     console.log(newUser);
@@ -45,7 +43,7 @@ class Login extends Component {
         style={{ maxWidth: '95%', margin: '24px auto' }}
         spacing={3}
       >
-        <Grid item sm={2}>
+        <Grid item sm={12}>
           <Button
             style={{ lineHeight: 'normal' }}
             variant="outlined"
@@ -56,22 +54,25 @@ class Login extends Component {
             <span style={{ marginRight: 4 }}>Go Back Home</span>
           </Button>
         </Grid>
-        <Grid item sm={10}>
-          <Typography variant="h4" style={{ textAlign: 'right' }}>
-            <b>Login</b> Below
-          </Typography>
-        </Grid>
         <Paper
           style={{
             width: '50%',
             minWidth: 300,
             maxWidth: 500,
-            minHeight: 200,
             padding: '1.5rem'
           }}
         >
           <form action="">
             <Grid container direction="column" spacing={2}>
+              <Grid item style={{ marginLeft: '.5em' }}>
+                <Typography variant="h4">
+                  <b>Log In</b> Below
+                </Typography>
+                <Typography>
+                  Don't have an account yet?{' '}
+                  <Link to="/register">Register</Link>
+                </Typography>
+              </Grid>
               <Grid item>
                 <TextField
                   label="Name"
@@ -104,7 +105,7 @@ class Login extends Component {
                   variant="outlined"
                   color="primary"
                 >
-                  Log In
+                  Sign Up
                 </Button>
               </Grid>
             </Grid>

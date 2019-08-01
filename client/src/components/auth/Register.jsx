@@ -45,7 +45,7 @@ class Register extends Component {
         style={{ maxWidth: '95%', margin: '24px auto' }}
         spacing={3}
       >
-        <Grid item sm={2}>
+        <Grid item sm={12}>
           <Button
             style={{ lineHeight: 'normal' }}
             variant="outlined"
@@ -61,7 +61,6 @@ class Register extends Component {
             width: '50%',
             minWidth: 300,
             maxWidth: 500,
-            // minHeight: 200,
             padding: '1.5rem'
           }}
         >
