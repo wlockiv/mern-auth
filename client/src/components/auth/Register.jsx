@@ -1,7 +1,10 @@
-import { Button, Grid, Typography, Paper, TextField } from '@material-ui/core';
+import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
 import { KeyboardArrowLeft } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
+import { registerUser } from '../../actions/authActions';
 
 class Register extends Component {
   constructor() {
@@ -16,23 +19,30 @@ class Register extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   onChange = e => {
-    this.setState({ [e.target.id]: e.target.values });
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   onSubmit = e => {
     e.preventDefault();
 
-    const { name, email, password, password2 } = this.state;
-
     const newUser = {
-      name,
-      email,
-      password,
-      password2
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
     };
 
     console.log(newUser);
+    this.props.registerUser(newUser, this.props.history);
   };
 
   render() {
@@ -64,7 +74,7 @@ class Register extends Component {
             padding: '1.5rem'
           }}
         >
-          <form action="">
+          <form noValidate onSubmit={this.onSubmit}>
             <Grid container direction="column" spacing={2}>
               <Grid item style={{ marginLeft: '.5em' }}>
                 <Typography variant="h4">
@@ -78,43 +88,60 @@ class Register extends Component {
                 <TextField
                   label="Name"
                   name="name"
+                  id="name"
                   style={{ width: '100%' }}
                   variant="outlined"
+                  error={errors.name}
+                  helperText={errors.name}
+                  onChange={this.onChange}
                 />
               </Grid>
               <Grid item>
                 <TextField
                   label="Email"
                   name="email"
+                  id="email"
                   style={{ width: '100%' }}
                   variant="outlined"
+                  error={errors.email}
+                  helperText={errors.email}
+                  onChange={this.onChange}
                 />
               </Grid>
               <Grid item>
                 <TextField
                   label="Password"
                   name="password"
+                  id="password"
                   style={{ width: '100%' }}
                   variant="outlined"
                   type="password"
                   autoComplete="off"
+                  error={errors.password}
+                  helperText={errors.password}
+                  onChange={this.onChange}
                 />
               </Grid>
               <Grid item>
                 <TextField
                   label="Confirm Password"
                   name="password2"
+                  id="password2"
                   style={{ width: '100%' }}
                   variant="outlined"
                   type="password"
                   autoComplete="off"
+                  error={errors.password2}
+                  helperText={errors.password2}
+                  onChange={this.onChange}
                 />
               </Grid>
-              <Grid item alignItems="center">
+              <Grid item>
                 <Button
                   style={{ width: '100%' }}
                   variant="outlined"
                   color="primary"
+                  type="submit"
                 >
                   Sign Up
                 </Button>
@@ -127,4 +154,18 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(withRouter(Register));

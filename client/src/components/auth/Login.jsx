@@ -2,35 +2,47 @@ import { Button, Grid, Typography, Paper, TextField } from '@material-ui/core';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {
   constructor() {
     super();
-
     this.state = {
-      name: '',
       email: '',
       password: '',
       errors: {}
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      // Direct user to dashboard when they login
+      this.props.history.push('/dashboard');
+    }
+
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   onChange = e => {
-    this.setState({ [e.target.id]: e.target.values });
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   onSubmit = e => {
     e.preventDefault();
 
-    const { name, email, password } = this.state;
-
-    const newUser = {
-      name,
-      email,
-      password
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
     };
 
-    console.log(newUser);
+    console.log(userData);
+    this.props.loginUser(userData);
   };
 
   render() {
@@ -62,7 +74,7 @@ class Login extends Component {
             padding: '1.5rem'
           }}
         >
-          <form action="">
+          <form noValidate onSubmit={this.onSubmit}>
             <Grid container direction="column" spacing={2}>
               <Grid item style={{ marginLeft: '.5em' }}>
                 <Typography variant="h4">
@@ -75,37 +87,42 @@ class Login extends Component {
               </Grid>
               <Grid item>
                 <TextField
-                  label="Name"
-                  name="name"
-                  style={{ width: '100%' }}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item>
-                <TextField
                   label="Email"
                   name="email"
+                  id="email"
                   style={{ width: '100%' }}
                   variant="outlined"
+                  error={errors.email || errors.emailnotfound}
+                  helperText={[errors.email, errors.emailnotfound]
+                    .filter(Boolean)
+                    .join(', ')}
+                  onChange={this.onChange}
                 />
               </Grid>
               <Grid item>
                 <TextField
                   label="Password"
                   name="password"
+                  id="password"
                   style={{ width: '100%' }}
                   variant="outlined"
                   type="password"
                   autoComplete="off"
+                  error={errors.password || errors.passwordincorrect}
+                  helperText={[errors.password, errors.passwordincorrect]
+                    .filter(Boolean)
+                    .join(', ')}
+                  onChange={this.onChange}
                 />
               </Grid>
-              <Grid item alignItems="center">
+              <Grid item>
                 <Button
                   style={{ width: '100%' }}
                   variant="outlined"
                   color="primary"
+                  type="submit"
                 >
-                  Sign Up
+                  Log In
                 </Button>
               </Grid>
             </Grid>
@@ -116,4 +133,18 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(Login);
