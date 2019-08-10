@@ -19,6 +19,14 @@ class Register extends Component {
     };
   }
 
+  componentDidMount() {
+    // if logged in an user navigates to register page,
+    // this should redirect them to dashboard
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
@@ -41,7 +49,6 @@ class Register extends Component {
       password2: this.state.password2
     };
 
-    console.log(newUser);
     this.props.registerUser(newUser, this.props.history);
   };
 

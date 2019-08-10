@@ -16,6 +16,14 @@ class Login extends Component {
     };
   }
 
+  componentDidMount() {
+    // if logged in an user navigates to login page,
+    // this should redirect them to dashboard
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       // Direct user to dashboard when they login
@@ -41,7 +49,6 @@ class Login extends Component {
       password: this.state.password
     };
 
-    console.log(userData);
     this.props.loginUser(userData);
   };
 
